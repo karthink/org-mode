@@ -192,18 +192,18 @@ Place-holders used by `:image-converter' and `:latex-compiler':
 
   %f    input file name
   %b    base name of input file
-  %B    absolute base name of input file
   %o    base directory of input file
   %O    absolute output file name
 
-Place-holders only used by `:latex-compiler':
+Place-holders used only by `:latex-compiler':
 
   %l   LaTeX compiler command string
   %L   LaTeX compiler command name
 
-Place-holders only used by `:image-converter':
+Place-holders used only by `:image-converter':
 
-  %D    dpi, which is used to adjust image size by some processing commands."
+  %B    absolute base name of input file
+  %D    dpi, used to adjust image size by some processing commands."
   :group 'org-latex-preview
   :package-version '(Org . "9.7")
   :type '(alist :tag "LaTeX to image backends"
@@ -2591,13 +2591,18 @@ The path of the created LaTeX file is returned."
               (current-buffer))))
          (tex-compile-commands-fmt (plist-get extended-info :latex-compiler))
          (texfile (plist-get extended-info :texfile))
+         (texfile-base (file-name-base texfile))
+         (outputfile (concat texfile-base "."
+                             (plist-get extended-info :image-input-type)))
          (org-tex-compiler
           (cdr (assoc (plist-get extended-info :latex-processor)
                       org-latex-preview-compiler-command-map)))
          (tex-command-spec
           `((?o . ,(shell-quote-argument temporary-file-directory))
-            (?b . ,(shell-quote-argument (file-name-base texfile)))
+            (?b . ,(shell-quote-argument texfile-base))
             (?f . ,(shell-quote-argument texfile))
+            (?O . ,(shell-quote-argument
+                    (expand-file-name outputfile temporary-file-directory)))
             (?l . ,org-tex-compiler)
             (?L . ,(car (split-string org-tex-compiler)))))
          (tex-formatted-commands
@@ -2664,11 +2669,11 @@ The path of the created LaTeX file is returned."
                    140.0)))
          (texfile (plist-get extended-info :texfile))
          (texfile-base (file-name-base texfile))
+         (outputfile-base (expand-file-name texfile-base temporary-file-directory))
          (img-command-spec
           `((?o . ,(shell-quote-argument temporary-file-directory))
             (?b . ,(shell-quote-argument (file-name-base texfile)))
-            (?B . ,(shell-quote-argument
-                    (expand-file-name texfile-base temporary-file-directory)))
+            (?B . ,(shell-quote-argument outputfile-base))
             (?D . ,(shell-quote-argument (format "%s" dpi)))
             (?f . ,(shell-quote-argument
                     (expand-file-name
@@ -2676,10 +2681,11 @@ The path of the created LaTeX file is returned."
                              "." (plist-get extended-info :image-input-type))
                      temporary-file-directory)))
             (?O . ,(shell-quote-argument
-                    (concat (expand-file-name texfile-base temporary-file-directory)
-                            (pcase (plist-get extended-info :image-output-type)
-                              ("png" "-%09d.png")
-                              ("svg" "-%9p.svg")))))))
+                    (concat outputfile-base
+                            (pcase (plist-get extended-info :processor)
+                              ((or 'dvipng 'imagemagick) "-%09d.png")
+                              ('dvisvgm "-%9p.svg")
+                              (_ (concat "." (plist-get extended-info :image-output-type)))))))))
          (img-formatted-command
           (split-string-shell-command
            (format-spec img-extract-command img-command-spec))))
