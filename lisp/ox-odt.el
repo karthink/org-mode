@@ -751,8 +751,8 @@ provided, process as `verbatim'."
   :safe #'always)
 
 (defcustom org-odt-latex-image-options
-  '(:foreground "Black" :background "Transparent"
-    :page-width 1.0 :scale 1.0 :inline nil)
+  '( :foreground "Black" :background "Transparent"
+     :page-width 1.0 :scale 1.0)
   "LaTeX preview options that apply to generated images.
 This is a ODT-specific counterpart to
 `org-latex-preview-appearance-options', which see."
@@ -2282,6 +2282,7 @@ SHORT-CAPTION are strings."
 LINK is the link pointing to the inline image.  INFO is a plist
 used as a communication channel."
   (cl-assert (org-element-type-p element 'link))
+  (cl-assert (equal "file" (org-element-property :type element)))
   (let* ((src (let ((raw-path (org-element-property :path element)))
                 (if (file-name-absolute-p raw-path) raw-path
                   (expand-file-name raw-path))))
@@ -3825,11 +3826,11 @@ INFO is the communication channel."
             (cl-incf count)
             (if-let* ((latex-frag (org-element-property :value latex))
                       (path (org-mathml-convert-latex-cached latex-frag))
-                      (link (list 'link
-                                  (list :type "file"
-                                        :path path
-                                        :format 'bracket
-                                        :raw-link (format "file:%s" path))))
+                      (link (org-element-create
+                             'link (list :type "file"
+                                         :path path
+                                         :format 'bracket
+                                         :raw-link (format "file:%s" path))))
                       (replacement
                        (if (eq (org-element-type latex) 'latex-environment)
                            ;;LaTeX environment.  Mimic a "standalone image
@@ -3906,10 +3907,11 @@ INFO is the communication channel."
                       (prog1 nil (org-display-warning
                                   (format "Failed to generate preview image for element: %s" latex-frag)))))
                  (source-file (car path-info))
-                 (link (list 'link (list :type "file"
-                                         :path source-file
-                                         :format 'bracket
-                                         :raw-link (format "file:%s" source-file)))))
+                 (link (org-element-create
+                        'link (list :type "file"
+                                    :path source-file
+                                    :format 'bracket
+                                    :raw-link (format "file:%s" source-file)))))
               (let ((replacement
                      (cl-case (org-element-type latex-*)
                        ;;LaTeX environment.  Mimic a "standalone image
