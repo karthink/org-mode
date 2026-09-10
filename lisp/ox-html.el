@@ -1200,7 +1200,7 @@ This supports two extra properties,
               This is only applied when used along with svg, as in
               (svg svg-embed)."
   :group 'org-export-html
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type 'plist)
 
 ;;;; Template :: Mathjax
@@ -3208,7 +3208,7 @@ ELEMENT."
       ('html
        (org-format-latex-as-html content))
       ('mathml
-       (if-let ((path (org-mathml-convert-latex-cached content)))
+       (if-let* ((path (org-mathml-convert-latex-cached content)))
            (with-temp-buffer
              (insert-file-contents path)
              (buffer-string))

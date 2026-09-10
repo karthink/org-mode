@@ -2218,16 +2218,16 @@ This is intended to speed up Org's LaTeX preview and export process."
          ;; temporary-file-directory otherwise.  Note that in either
          ;; case, the format file itself is created/placed in
          ;; temporary-file-directory.
-         (if tempfile-p temporary-file-directory default-directory)))
+         (if tempfile-p (temporary-file-directory) default-directory)))
     (or (cadr
          (org-persist-read "LaTeX format file cache"
                            (list :key preamble-hash)
                            nil nil :read-related t))
-        (when-let ((dump-file
-                    (org-latex--precompile-preamble
-                     info preamble
-                     (expand-file-name preamble-hash temporary-file-directory)
-                     spec)))
+        (when-let* ((dump-file
+                     (org-latex--precompile-preamble
+                      info preamble
+                      (expand-file-name preamble-hash (temporary-file-directory))
+                      spec)))
           (cadr
            (org-persist-register `(,"LaTeX format file cache"
                                    (file ,dump-file))

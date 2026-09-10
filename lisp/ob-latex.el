@@ -46,6 +46,7 @@
 (add-to-list 'org-babel-tangle-lang-exts '("latex" . "tex"))
 
 (defvar org-latex-preview-preamble)     ; From org-latex-preview.el
+(defvar org-latex-preview-process-alist)
 (defvar org-latex-preview-appearance-options)
 (defvar org-latex-default-packages-alist)
 (defvar org-latex-packages-alist)

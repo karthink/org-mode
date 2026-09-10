@@ -79,10 +79,12 @@
   :tag "Org LaTeX Preview"
   :group 'org)
 
+
+;;;; User options
 ;;;###autoload
 (defcustom org-latex-preview-appearance-options
-  '(:foreground auto :background "Transparent"
-    :scale 1.0 :zoom 1.0 :page-width 0.6)
+  '( :foreground auto :background "Transparent"
+     :scale 1.0 :zoom 1.0 :page-width 0.6)
   "Options for creating images from LaTeX fragments.
 This is a property list with the following properties:
 :foreground  The foreground color for images embedded in Emacs, e.g. \"Black\".
@@ -101,7 +103,7 @@ This is a property list with the following properties:
                this sets the text width to this ratio of the page width.
              - nil, in which case the default text width is unmodified."
   :group 'org-latex-preview
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type 'plist)
 
 (defcustom org-latex-preview-process-default
@@ -110,7 +112,7 @@ This is a property list with the following properties:
 All available processes and theirs documents can be found in
 `org-latex-preview-process-alist', which see."
   :group 'org-latex-preview
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type 'symbol)
 
 ;;;###autoload
@@ -205,7 +207,7 @@ Place-holders used only by `:image-converter':
   %B    absolute base name of input file
   %D    dpi, used to adjust image size by some processing commands."
   :group 'org-latex-preview
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type '(alist :tag "LaTeX to image backends"
           :value-type (plist)))
 
@@ -221,7 +223,7 @@ when producing a preview (optionally including flags).
 This should only ever be changed in the event that PDF, not DVI output
 is required."
   :group 'org-latex-preview
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type '(alist :tag "Compiler"
           :value-type (string :type "command")))
 
@@ -238,7 +240,7 @@ It can be set to
 It may also be set to the symbol live, this is for tracking live updates
 and meant for internal use only."
   :group 'org-latex-preview
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type '(choice (const :tag "Use org-mode's persistent cache system" persist)
                  (const :tag "Use the system temporary directory" temp)
                  (string :tag "Path to cache directory")))
@@ -248,7 +250,7 @@ and meant for internal use only."
 This is only relevant when `org-latex-preview-cache' is set to
 persist."
   :group 'org-latex-preview
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type '(choice (const :tag "Never" never)
           (const :tag "Always" nil)
           (number :tag "Keep N days")
@@ -266,7 +268,7 @@ simply be left as the automatic LaTeX numbering generated when
 previewing the batch of fragments.  This may be mostly-correct,
 or mostly-incorrect depending on the situation."
   :group 'org-latex-preview
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type '(choice (const :tag "No" nil)
           (const :tag "Preview " preview)
           (const :tag "Yes" t)))
@@ -284,7 +286,7 @@ There are three recognised value symbols:
 - fringe, apply a fringe marker to lines where fragments are being
   processed."
   :group 'org-latex-preview
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type '(choice
           (const :tag "No indicator" nil)
           (const :tag "Fringe marker" fringe)
@@ -293,7 +295,7 @@ There are three recognised value symbols:
 (defcustom org-latex-preview-mode-ignored-environments '("figure")
   "List of LaTeX environments that should not be automatically previewed."
   :type '(repeat string)
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :group 'org-latex-preview)
 
 (defcustom org-latex-preview-mode-ignored-commands nil
@@ -302,7 +304,7 @@ There are three recognised value symbols:
 When these commands are invoked, they will not cause previews to
 be revealed when using `org-latex-preview-mode'."
   :type '(repeat symbol)
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :group 'org-latex-preview)
 
 (defcustom org-latex-preview-process-finish-functions nil
@@ -372,11 +374,12 @@ See `org-latex-preview-process-active-indicator'."
   "Buffer name for Preview LaTeX output.")
 
 (defconst org-latex-preview--temp-cache-dir
-  (expand-file-name "org-latex-preview" temporary-file-directory)
+  (expand-file-name "org-latex-preview" (temporary-file-directory))
   "Folder used to cache temp-stored previews.")
 
 (defconst org-latex-preview-live--cache-dir
-  (expand-file-name "org-latex-preview-mode-display-live" temporary-file-directory)
+  (expand-file-name "org-latex-preview-mode-display-live"
+                    (temporary-file-directory))
   "Folder used to cache live previews.")
 
 (defcustom org-latex-preview-preamble "\\documentclass{article}
@@ -402,7 +405,7 @@ is called in a buffer, but subsequent calls will be faster.
 
 This requires the LaTeX package \"mylatexformat\" to be installed."
   :group 'org-latex-preview
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type 'boolean)
 
 (defcustom org-latex-preview-mode-track-inserts t
@@ -426,7 +429,7 @@ preview images are generated only for the current buffer, and not any
 indirect clones, or for the base buffer if the current buffer is a
 clone.  This is currently a limitation of the LaTeX preview system."
   :group 'org-latex-preview
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type '(choice
           (const :tag "Track inserts" t)
           (const :tag "Don't track inserts" nil)))
@@ -452,7 +455,8 @@ the image.")
 (defconst org-latex-preview--overlay-priority -80
   "The priority used with preview overlays.")
 
-;; Code for `org-latex-preview-mode':
+
+;;;; Code for `org-latex-preview-mode':
 ;;
 ;; The boundaries of latex preview image overlays are automatically
 ;; extended to track changes in the underlying text by the functions
@@ -829,7 +833,7 @@ image and display its text."
                           org-latex-preview-mode-ignored-commands)))
       (overlay-put ov 'display nil)
       (overlay-put ov 'org-view-text t)
-      (when-let ((f (overlay-get ov 'face)))
+      (when-let* ((f (overlay-get ov 'face)))
         (overlay-put ov 'org-hidden-face f)
         (overlay-put ov 'face nil))
       (org-latex-preview-mode--move-into ov)
@@ -853,7 +857,7 @@ image.  The preview image is regenerated if necessary."
           ;; necesarily the optimal duration, but from a little
           ;; testing it appears to be fairly reasonable.
           (run-at-time 0.01 nil #'org-latex-preview-mode--regenerate-overlay ov)
-        (when-let (f (overlay-get ov 'org-hidden-face))
+        (when-let* ((f (overlay-get ov 'org-hidden-face)))
           (unless (eq f 'org-latex-preview-processing-face)
             (overlay-put ov 'face f))
           (overlay-put ov 'org-hidden-face nil))
@@ -959,7 +963,8 @@ customize the variable `org-latex-preview-mode-display-live'."
     (remove-hook 'org-cycle-hook 'org-latex-preview-mode--org-cycle 'local)
     (org-latex-preview-live--teardown)))
 
-;; Code for "live" preview generation
+
+;;;; Code for "live" preview generation
 ;;
 ;; When `org-latex-preview-mode' is turned on and
 ;; `org-latex-preview-mode-display-live' is non-nil, previews are
@@ -1068,7 +1073,7 @@ When `org-latex-preview-mode-display-live' is non-nil and
 updated when there have been no changes to the LaTeX fragment or
 environment for at least this much time."
   :group 'org-latex-preview
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type 'number)
 
 (defvar org-latex-preview-mode-update-throttle 1.0
@@ -1161,10 +1166,10 @@ Ensures that FUNC runs at the end of the throttle duration."
   (setq org-latex-preview-live--element-type nil)
   (overlay-put ov 'after-string nil)
   ;; When exiting live-preview, move the final image to the main cache
-  (when-let ((org-latex-preview-live--last-hash)
-             ((overlay-get ov 'org-preview-image))
-             (path-info (org-latex-preview--get-cached
-                         org-latex-preview-live--last-hash 'live)))
+  (when-let* ((org-latex-preview-live--last-hash)
+              ((overlay-get ov 'org-preview-image))
+              (path-info (org-latex-preview--get-cached
+                          org-latex-preview-live--last-hash 'live)))
     ;; Copy final image data to main cache location
     (when (equal (file-name-directory (car path-info))
                  org-latex-preview-live--cache-dir)
@@ -1321,7 +1326,7 @@ This is meant to be called via `org-src-mode-hook'."
         (when (and org-latex-preview-numbered
                    (eq (org-element-type element) 'latex-environment))
           (with-current-buffer org-buf
-            (when-let ((numbering-table (org-latex-preview--environment-numbering-table)))
+            (when-let* ((numbering-table (org-latex-preview--environment-numbering-table)))
               (setq numbering-offsets (list (gethash element numbering-table))))))
 
         (let* ((element-type
@@ -1432,6 +1437,8 @@ See `org-latex-preview-mode-display-live' for details."
   (setq-local org-latex-preview-live--generator nil
               org-latex-preview-live--last-hash nil))
 
+
+;;;; Code for `org-latex-preview' processing pipeline
 (defun org-latex-preview-clear-overlays (&optional beg end)
   "Remove all overlays with LaTeX fragment images in current buffer.
 When optional arguments BEG and END are non-nil, remove all
@@ -1484,9 +1491,9 @@ will be treated as \"point\"."
               (16 'buffer)
               (4 (if (use-region-p) 'clear-region 'clear-section))
               ((guard (use-region-p)) 'region)
-              (_ (if-let ((datum (org-element-context)) ; Auto, i.e. element at point or section
-                          ((memq (org-element-type datum)
-                                 '(latex-environment latex-fragment))))
+              (_ (if-let* ((datum (org-element-context)) ; Auto, i.e. element at point or section
+                           ((memq (org-element-type datum)
+                                  '(latex-environment latex-fragment))))
                      datum 'section)))))
     (pcase mode
       ('buffer
@@ -1514,8 +1521,8 @@ will be treated as \"point\"."
       ('clear-region
        (org-latex-preview-clear-overlays (region-beginning) (region-end)))
       ('point
-       (when-let ((datum (org-element-context))
-                  ((memq (org-element-type datum) '(latex-environment latex-fragment))))
+       (when-let* ((datum (org-element-context))
+                   ((memq (org-element-type datum) '(latex-environment latex-fragment))))
          (org-latex-preview--mode-aware-toggle datum)))
       ((guard (memq (org-element-type mode) '(latex-environment latex-fragment)))
        (org-latex-preview--mode-aware-toggle mode))
@@ -1693,7 +1700,7 @@ is either the substring between BEG and END or (when provided) VALUE."
                                (and (eq processing-type 'dvisvgm)
                                     (list :foreground
                                           org-latex-preview--svg-fg-standin)))))
-          (if-let ((path-info (org-latex-preview--get-cached hash)))
+          (if-let* ((path-info (org-latex-preview--get-cached hash)))
               (org-latex-preview--update-overlay
                (org-latex-preview--ensure-overlay beg end)
                path-info)
@@ -2325,16 +2332,16 @@ Returns a list of async tasks started."
             (org-latex-preview--tex-compile-async extended-info))
            (img-extract-async
             (org-latex-preview--image-extract-async extended-info)))
-      (when-let ((cache-base-dir
-                  (cond
-                   ((eq cache-location 'temp)
-                    org-latex-preview--temp-cache-dir)
-                   ((eq cache-location 'live)
-                    org-latex-preview-live--cache-dir))))
+      (when-let* ((cache-base-dir
+                   (cond
+                    ((eq cache-location 'temp)
+                     org-latex-preview--temp-cache-dir)
+                    ((eq cache-location 'live)
+                     org-latex-preview-live--cache-dir))))
         (unless (file-directory-p cache-base-dir)
           (make-directory cache-base-dir t)))
       (plist-put (cddr img-extract-async) :success
-                 (list ; The order is important here.
+                 (list                  ; The order is important here.
                   #'org-latex-preview--check-all-fragments-produced
                   #'org-latex-preview--cleanup-callback))
       (plist-put (cddr img-extract-async) :failure
@@ -2522,7 +2529,7 @@ The path of the created LaTeX file is returned."
          (tex-temp-name
           (expand-file-name
            (concat (make-temp-name "org-tex-") ".tex")
-           (and remote-file-p temporary-file-directory)))
+           (and remote-file-p (temporary-file-directory))))
          (write-region-inhibit-fsync t)
          (coding-system-for-write buffer-file-coding-system)
          (precompile-failed-msg))
@@ -2531,15 +2538,15 @@ The path of the created LaTeX file is returned."
     (when org-latex-preview-process-precompile
       (pcase (plist-get processing-info :latex-processor)
         ("pdflatex"
-         (if-let ((format-file (org-latex-preview--precompile processing-info header
-                                                              (not relative-file-p))))
+         (if-let* ((format-file (org-latex-preview--precompile
+                                 processing-info header (not relative-file-p))))
              (setq header (concat "%& " (file-name-sans-extension format-file)))
            (setq precompile-failed-msg
                  (concat
                   (format "Precompile failed for buffer %s."
                           (plist-get processing-info :org-buffer))
-                  (when-let ((filename (buffer-file-name
-                                        (plist-get processing-info :org-buffer))))
+                  (when-let* ((filename (buffer-file-name
+                                         (plist-get processing-info :org-buffer))))
                     (format " (File %s)" filename))
                   (condition-case nil
                       (unless (= 0 (call-process "kpsewhich" nil nil nil "preview.sty"))
@@ -2598,11 +2605,11 @@ The path of the created LaTeX file is returned."
           (cdr (assoc (plist-get extended-info :latex-processor)
                       org-latex-preview-compiler-command-map)))
          (tex-command-spec
-          `((?o . ,(shell-quote-argument temporary-file-directory))
+          `((?o . ,(shell-quote-argument (temporary-file-directory)))
             (?b . ,(shell-quote-argument texfile-base))
             (?f . ,(shell-quote-argument texfile))
             (?O . ,(shell-quote-argument
-                    (expand-file-name outputfile temporary-file-directory)))
+                    (expand-file-name outputfile (temporary-file-directory))))
             (?l . ,org-tex-compiler)
             (?L . ,(car (split-string org-tex-compiler)))))
          (tex-formatted-commands
@@ -2669,9 +2676,9 @@ The path of the created LaTeX file is returned."
                    140.0)))
          (texfile (plist-get extended-info :texfile))
          (texfile-base (file-name-base texfile))
-         (outputfile-base (expand-file-name texfile-base temporary-file-directory))
+         (outputfile-base (expand-file-name texfile-base (temporary-file-directory)))
          (img-command-spec
-          `((?o . ,(shell-quote-argument temporary-file-directory))
+          `((?o . ,(shell-quote-argument (temporary-file-directory)))
             (?b . ,(shell-quote-argument (file-name-base texfile)))
             (?B . ,(shell-quote-argument outputfile-base))
             (?D . ,(shell-quote-argument (format "%s" dpi)))
@@ -2679,7 +2686,7 @@ The path of the created LaTeX file is returned."
                     (expand-file-name
                      (concat texfile-base
                              "." (plist-get extended-info :image-input-type))
-                     temporary-file-directory)))
+                     (temporary-file-directory))))
             (?O . ,(shell-quote-argument
                     (concat outputfile-base
                             (pcase (plist-get extended-info :processor)
@@ -2716,7 +2723,7 @@ The path of the created LaTeX file is returned."
   (let* ((texfile (plist-get extended-info :texfile))
          (proc-buffers (plist-get extended-info :proc-buffers))
          (outputs-no-ext (expand-file-name (file-name-base texfile)
-                                           temporary-file-directory))
+                                           (temporary-file-directory)))
          (images
           (mapcar
            (lambda (fragment-info)
@@ -2742,7 +2749,7 @@ The path of the created LaTeX file is returned."
   "Place generated images, in accord with EXTENDED-INFO."
   (let* ((texfile (plist-get extended-info :texfile))
          (outputs-no-ext (expand-file-name (file-name-base texfile)
-                                           temporary-file-directory))
+                                           (temporary-file-directory)))
          (images
           (file-expand-wildcards
            (concat outputs-no-ext "*." (plist-get extended-info :image-output-type))
@@ -2779,9 +2786,9 @@ fragments are regenerated."
         ;; If output ends prematurely, this is most likely due to an issue with
         ;; the last "succesfully" produced fragment, and so we mark it as erronious
         ;; and attempt to re-generate the rest.
-        (when-let ((bad-fragment (car fragments)))
+        (when-let* ((bad-fragment (car fragments)))
           (plist-put bad-fragment :errors
-                     (concat (when-let ((current-error (plist-get bad-fragment :errors)))
+                     (concat (when-let* ((current-error (plist-get bad-fragment :errors)))
                                (concat current-error "\n\n"))
                              "Preview generation catastrophically failed after this fragment."))
           (org-latex-preview--remove-cached
@@ -2818,7 +2825,7 @@ fragments are regenerated."
         info)
     (setq info (plist-put info :image-type image-type))
     (dolist (key '(:width :height :depth))
-      (when-let ((val (plist-get fragment-info key)))
+      (when-let* ((val (plist-get fragment-info key)))
         (plist-put info key val)))
     (plist-put info :errors (plist-get fragment-info :errors))
     info))
@@ -3068,7 +3075,7 @@ EXTENDED-INFO, and displayed in the buffer."
   (let ((outputs-no-ext (expand-file-name
                          (file-name-base
                           (plist-get extended-info :texfile))
-                         temporary-file-directory))
+                         (temporary-file-directory)))
         (fragments (plist-get extended-info :fragments))
         fragments-to-show page-info-end)
     (while (search-forward "]" nil t)
@@ -3243,7 +3250,7 @@ entry is looked for in `org-latex-preview--table'."
                             (list :key key)
                             :remove-related t))
    (org-latex-preview--table
-    (when-let ((cache (gethash key org-latex-preview--table)))
+    (when-let* ((cache (gethash key org-latex-preview--table)))
       (remhash key org-latex-preview--table)
       (when (file-exists-p (car cache))
         (delete-file (car cache)))))))

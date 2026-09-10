@@ -757,7 +757,7 @@ provided, process as `verbatim'."
 This is a ODT-specific counterpart to
 `org-latex-preview-appearance-options', which see."
   :group 'org-export-odt
-  :package-version '(Org . "9.7")
+  :package-version '(Org . "10.0")
   :type 'plist)
 
 ;;;; Links
@@ -2282,8 +2282,7 @@ SHORT-CAPTION are strings."
 LINK is the link pointing to the inline image.  INFO is a plist
 used as a communication channel."
   (cl-assert (org-element-type-p element 'link))
-  (let* ((src (let* ((type (org-element-property :type element))
-		     (raw-path (org-element-property :path element)))
+  (let* ((src (let ((raw-path (org-element-property :path element)))
                 (if (file-name-absolute-p raw-path) raw-path
                   (expand-file-name raw-path))))
 	 (src-expanded (if (file-name-absolute-p src) src
@@ -3824,29 +3823,29 @@ INFO is the communication channel."
         (org-element-map tree '(latex-fragment latex-environment)
           (lambda (latex)
             (cl-incf count)
-            (if-let ((latex-frag (org-element-property :value latex))
-                     (path (org-mathml-convert-latex-cached latex-frag))
-                     (link (list 'link
-                                 (list :type "file"
-                                       :path path
-                                       :format 'bracket
-                                       :raw-link (format "file:%s" path))))
-                     (replacement
-                      (if (eq (org-element-type latex) 'latex-environment)
-                          ;;LaTeX environment.  Mimic a "standalone image
-                          ;; or formula" by enclosing the `link' in
-                          ;; a `paragraph'.  Copy over original
-                          ;; attributes, captions to the enclosing
-                          ;; paragraph.
-                          (org-element-adopt-elements
-                              (list 'paragraph
-                                    (list :style "OrgFormula"
-                                          :name
-                                          (org-element-property :name latex)
-                                          :caption
-                                          (org-element-property :caption latex)))
-                            link)
-                        link)))
+            (if-let* ((latex-frag (org-element-property :value latex))
+                      (path (org-mathml-convert-latex-cached latex-frag))
+                      (link (list 'link
+                                  (list :type "file"
+                                        :path path
+                                        :format 'bracket
+                                        :raw-link (format "file:%s" path))))
+                      (replacement
+                       (if (eq (org-element-type latex) 'latex-environment)
+                           ;;LaTeX environment.  Mimic a "standalone image
+                           ;; or formula" by enclosing the `link' in
+                           ;; a `paragraph'.  Copy over original
+                           ;; attributes, captions to the enclosing
+                           ;; paragraph.
+                           (org-element-adopt-elements
+                               (list 'paragraph
+                                     (list :style "OrgFormula"
+                                           :name
+                                           (org-element-property :name latex)
+                                           :caption
+                                           (org-element-property :caption latex)))
+                             link)
+                         link)))
                 (progn
                   ;; Note down the object that link replaces.
                   (org-element-put-property replacement :replaces
@@ -3864,20 +3863,20 @@ INFO is the communication channel."
       ;; If the desired converter is not available, force verbatim
       ;; processing.
       (cond
-        ((eq processing-type 'mathml)
-         (setq warning "LaTeX to MathML converter not available.  Falling back to verbatim."
-               processing-type 'verbatim))
-        ((assq processing-type org-latex-preview-process-alist)
-         (let ((programs
-                (thread-first processing-type
-                              (alist-get org-latex-preview-process-alist)
-                              (plist-get :programs))))
-           (unless (cl-every (lambda (p) (org-check-external-command p "" 'no-error)) programs)
-             (setq warning "LaTeX or image converter not available.  Falling back to verbatim."
-                   processing-type 'verbatim))))
-        (t
-         (setq warning "Unknown LaTeX option.  Forcing verbatim."
-               processing-type 'verbatim)))
+       ((eq processing-type 'mathml)
+        (setq warning "LaTeX to MathML converter not available.  Falling back to verbatim."
+              processing-type 'verbatim))
+       ((assq processing-type org-latex-preview-process-alist)
+        (let ((programs
+               (thread-first processing-type
+                             (alist-get org-latex-preview-process-alist)
+                             (plist-get :programs))))
+          (unless (cl-every (lambda (p) (org-check-external-command p "" 'no-error)) programs)
+            (setq warning "LaTeX or image converter not available.  Falling back to verbatim."
+                  processing-type 'verbatim))))
+       (t
+        (setq warning "Unknown LaTeX option.  Forcing verbatim."
+              processing-type 'verbatim)))
       ;; Display warning if the selected PROCESSING-TYPE is not
       ;; available, but there are fragments to be converted.
       (when warning

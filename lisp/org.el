@@ -233,6 +233,7 @@ This regular expression matches these groups:
 (declare-function org-timer-pause-or-continue "org-timer" (&optional stop))
 (declare-function org-timer-start "org-timer" (&optional offset))
 (declare-function org-toggle-archive-tag "org-archive" (&optional find-done))
+(declare-function org-latex-preview "org-latex-preview" (&optional mode))
 
 (defvar org-agenda-buffer-name)
 (defvar org-element-paragraph-separate)
@@ -5637,10 +5638,7 @@ Result depends on variable `org-highlight-latex-and-related'."
 	(re-latex
 	 (when (or (memq 'latex org-highlight-latex-and-related)
 		   (memq 'native org-highlight-latex-and-related))
-           (let ((matchers (or org-highlight-latex-matchers
-                               ;; FIXME: Remove after deleting the
-                               ;; obsolete `org-format-latex-options'
-                               (plist-get org-latex-preview-appearance-options :matchers))))
+           (let ((matchers org-highlight-latex-matchers))
 	     (delq nil
 		   (mapcar (lambda (x)
 			     (and (member (car x) matchers) (nth 1 x)))
