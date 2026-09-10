@@ -14140,23 +14140,15 @@ or
 
 : #+OPTIONS: tex:imagemagick
 
-The images can be inserted as links or as inline data for a more
-portable HTML document.  When using =dvisvgm=, SVG images can
-additionally be embedded as DOM objects in the page.  This method has
-the advantage that it respects theme changes and some CSS
-specifications.
-
-In all cases, the images are scaled and aligned to fit in with
-surrounding text, respecting baselines and ascent.  The LaTeX source
-for an image is available as its alt-text in the HTML document.
+The images are scaled and aligned to fit in with surrounding text,
+respecting baselines and ascent.  The LaTeX source for an image is
+available as its alt-text in the HTML document.
 
 #+vindex: org-html-latex-image-options
 The apperance and inclusion method of LaTeX preview images in HTML
-exports is governed by the option ~org-html-latex-image-options~.
-In particular, the =:image-dir= key controls the absolute or relative
-path where LaTeX preview images are stored, and the =:inline= key
-can be used to specify image types (=png= and/or =svg=) to inline or
-embed instead.
+exports is governed by the option ~org-html-latex-image-options~.  In
+particular, the =:image-dir= key controls the absolute or relative
+path where LaTeX preview images are stored.
 
 *** Text areas in HTML export
 :PROPERTIES:
