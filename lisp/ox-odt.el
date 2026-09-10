@@ -386,7 +386,8 @@ replacements.  See info node `(org)Advanced Export Configuration'."
   :package-version '(Org . "9.8")
   :type '(choice (const :tag "Leave forbidden characters as-is" t)
                  (const :tag "Err when forbidden characters encountered" nil)
-                 (string :tag "Replacement string")))
+                 (string :tag "Replacement string"))
+  :safe #'always)
 
 ;;;; Debugging
 
@@ -746,7 +747,8 @@ provided, process as `verbatim'."
                            :match-alternatives
                            (,(lambda (v)
                                (assq v org-latex-preview-process-alist))))
-          (const :tag "Leave math verbatim" verbatim)))
+          (const :tag "Leave math verbatim" verbatim))
+  :safe #'always)
 
 (defcustom org-odt-latex-image-options
   '(:foreground "Black" :background "Transparent"
@@ -4314,7 +4316,7 @@ parameters overriding Org default settings, but still inferior to
 file-local settings.
 
 Return output file's name."
-  (interactive)
+  (interactive nil org-mode)
   (let ((outfile (org-export-output-file-name ".odt" subtreep)))
     (if async
 	(org-export-async-start (lambda (f) (org-export-add-to-stack f 'odt))
