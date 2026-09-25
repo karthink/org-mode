@@ -120,7 +120,7 @@ inspection."
                               (expand-file-name
                                org-mathml-converter-jar-file))))
                  (?I . ,(shell-quote-argument tmp-in-file))
-                 (?i . ,latex-frag)
+                 (?i . ,(shell-quote-argument latex-frag))
                  (?o . ,(shell-quote-argument tmp-out-file)))))
          mathml shell-command-output)
     (when (called-interactively-p 'any)
@@ -130,7 +130,8 @@ inspection."
     (setq shell-command-output (shell-command-to-string cmd))
     (setq mathml
           (when (file-readable-p tmp-out-file)
-            (with-current-buffer (find-file-noselect tmp-out-file t)
+            (with-temp-buffer
+              (insert-file-contents tmp-out-file)
               (goto-char (point-min))
               (when (re-search-forward
                      (format "<math[^>]*?%s[^>]*?>"

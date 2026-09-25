@@ -1759,7 +1759,7 @@ For example, this could be used with LaTeXML as
   "Convert LATEX-FRAGMENT to HTML.
 This uses  `org-latex-to-html-convert-command', which see."
   (let ((cmd (format-spec org-latex-to-html-convert-command
-                          `((?i . ,latex-fragment)))))
+                          `((?i . ,(shell-quote-argument latex-fragment))))))
     (message "Running %s" cmd)
     (shell-command-to-string cmd)))
 
